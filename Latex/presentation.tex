@@ -1,0 +1,352 @@
+\documentclass{EESD}
+% To change the slides size go to EESD.cls file and edit the preamble as explained.
+
+% ---- Add your Meta-data to the PDF (Copyrights Kinda!) ----
+\hypersetup{
+  pdfinfo={
+    Title={Light Rail and Park\&Ride facilities in Sioux Falls},
+    Author={Julien Ars},
+  }
+}
+
+% Important packages to be called
+\usepackage{subcaption} % for adding sub-figures
+\usepackage{graphicx}
+\usepackage{tikz} % for cool graphics and drawings
+
+\usepackage[absolute,overlay]{textpos} % To place the figures by coordinates (x,y) - Beamer doesn't support floats XD
+\usepackage{multicol} % To adjust items and stuff automatically in a number of a pre-specified columns
+\graphicspath{{Figures/}}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lipsum} % Just a dummy text generator
+\usepackage{hyperref}
+% fonts packages
+\usepackage{ragged2e} % Justified typesetting
+
+% ChatGPT for table
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\usepackage{pifont}
+\usepackage{array}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+
+% For References Only
+\usepackage[style=authortitle,backend=bibtex]{biblatex}
+\addbibresource{references.bib} % Call the references database
+\AtBeginBibliography{\tiny} % Specify font size (Size matters)
+\renewcommand{\footnotesize}{\tiny}
+
+% For adding code blocks
+\usepackage{listings}
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=true,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+    commentstyle=\color{red},
+    rulecolor=\color{black},
+    numbers=left,
+    numberstyle=\tiny\color{black},
+    % framexleftmargin=15pt,
+    frame = single,
+}
+
+\author{Julien Ars}
+\title[Light rail and P\&R facilities in Sioux Falls]{Light Rail and Park\&Ride facilities in Sioux Falls}
+
+\institute[ENAC]{{\'Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL)}{\newline\newline Civil Engineering}}
+\subject{Talk}
+\date{2025-05-28}
+
+\begin{document}
+
+{ % <-- don't forget the scope resolution (Brackets) to limit the background change only for the cover page; otherwise, it will override the whole document's background :)
+\usebackgroundtemplate{} % To add a background for this slide XD - Empty one
+\coverpage{
+\titlepage{~}
+% To add additional text to the title components 
+{\newline \small CIVIL-477 - Transport Networks Modelling \& Analysis}
+}
+} % <-- and yeah close them too :)
+
+
+\setbeamertemplate{logo}{} % To override the logo from the other slides and delete it completely
+
+% Use smart division for the TOC
+\section*{Table  of content}
+\begin{frame}{Outlines}
+\tableofcontents
+\end{frame}
+
+% ----------------------- SiouxFalls
+\section*{A quick note}
+\begin{frame}{My projects this semester}
+	\begin{itemize}
+		\item \textbf{A real-time heuristic for the railway timetable rescheduling problem} (Semester project : 8 ECTS) \\
+		Under the supervision of Lea Ricard and Negar Rezvany \\
+		Develop an efficient heuristic to be used in delay management in the RER Vaud
+		\textcolor{bg!75!normal text.fg}{\item  \textbf{MaxSMT in delay management} (Pre-study : 3 ECTS) \\
+		Under the supervision of Thomas Dubach (ETH - IVT) \\
+		Use an existing 'MaxSMT' solver to limit impact of a delay in time and space}
+	\end{itemize}
+\end{frame}
+
+
+
+% -----------------------Introduction
+\section{Introduction}
+\breakingframe{
+\begin{textblock*}{0.8\textwidth}[0,0.5](0.17\textwidth,  0.55\textheight)
+\centering \Huge\textbf{\textcolor{black}{Introduction}}
+\end{textblock*}
+}
+
+\subsection{Problem definition}
+\begin{frame}{Problem definition}
+		
+	\begin{itemize}
+		\item Given a railway network with stations $s \in S$ each with a set of platforms $P_s$, bifurcations $b \in B$, section tracks $q \in Q$ between stations and/or bifurcations.
+		\item Given a planned schedule, with predefined trains $k \in K$ composed of a sequence of stations and bifurcations with given arrival and departure times.
+		\item Given passengers groups $g \in G$, each with a desired origin station $o_g$, destination station $d_g$ and desired departure time $t_g$ (and size $n_g$).
+		\item Given a disruption with known duration, impacting one or multiple section tracks, partially (reduced speed) or completely.
+	\end{itemize}
+
+	Get a new schedule for the train that minimises the passenger inconvenience $f_p$, the operational costs $f_o$ and the deviation from the original schedule.
+\end{frame}
+
+
+\subsection{Litterature}
+\begin{frame}{Relevant litterature for the project}
+	\begin{enumerate}
+		\item Work by Stefan Binder (2017) : \begin{itemize}
+			\item \textbf{\cite{BINDER_main}} : \\
+				MILP definition in a time-indexed formulation for a similar problem. \\
+				{\it We reuse their instance (simplified Dutch network) for testing.\\
+				We reuse their passenger cost definition.}
+			\item \textbf{\cite{BINDER_priority}} : \\
+				Proposition of an exogenous ordering of the passengers (instead of endogenous) \\
+				{\it We consider using a similar approach, and compare our performance with the proposed algorithm for passenger assignment}
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Relevant litterature for the project}
+	\begin{enumerate}
+		\item Work by Stefan Binder (2017) : \begin{itemize}
+			\item ...
+			\item \textbf{\cite{BINDER_heuristic}} : \\
+				Proposed ALNS heuristic for the problem \\
+				{\it Starting point for our heuristic}
+		\end{itemize}
+		\item Also on ALNS : \begin{itemize}
+				\item \textbf{\cite{ALNS}} : \\
+				First introduction of an {\it Adaptative Large Neighborhood Search} (ALNS) heuristic
+			\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Relevant litterature for the project}
+	\begin{enumerate}[3]
+		\item New developments :
+	\end{enumerate}
+
+	\begin{table}
+		\vspace{-5pt}
+	\centering
+	\begin{adjustbox}{width=\textwidth}
+	\scriptsize
+	\begin{tabular}{@{}llclccccc>{\raggedright\arraybackslash}p{3.5cm}@{}}
+	\toprule
+	\textbf{Author(s)} & \textbf{Net.} & \textbf{Algo.} & \textbf{Mult. obj.} & \textbf{Recovery decisions} & \textbf{Pass. assign.} & \textbf{Tracks} & \textbf{Seat reser.} & \textbf{Veh. capa.} & \textbf{Largest instance size} \\ 
+	\midrule
+	Veelenturf et al. (2016) & E-A & MILP & \ding{51} & C, D, O, R, ST & None & Multiple & & & Network, S = 26, T = 165, D = 2h, H = 2.75h \\
+	Binder et al. (2017)     & S-T     & MILP & \ding{51} & A, C, D, E, O, R & Dynamic & Double & & & Network, S = 11, T = 24, D = 2h, H = 2h \\
+	Zhu \& Goverde (2019)     & E-A & MILP & & A, C, D & Static & Single, double & & & Network, S = 17, T = 24/h, D = 3h, H = 4h \\
+	Altazin et al. (2020)    & E-A & SIM, H & \ding{51} & A, C, ST & Dynamic & Single, double & & & Network, S = 29, T = 25, D = 20 min, H = 2.5 \\
+	Zhu \& Goverde (2020b)    & E-A & MH & \ding{51} & A, C, D, O, ST & & & & & Network, S = 17, T = 72, D = 2h, H = 3h \\
+	Hong et al. (2021)       & S-T     & MILP & \ding{51} & C, D, O, R & Dynamic & Double & \ding{51} & \ding{51} & Line, S = 8, T = 20, D = 55 min, H = 4h \\
+	Zhan et al. (2021)       & S-T     & ADMM, DP & \ding{51} & C, D, O, R & Dynamic & Double & \ding{51} & \ding{51} & Network, S = 17, T = 20, D = 2h, H = 6h \\
+	Zhang et al. (2023)      & S-T     & LR-H & \ding{51} & C, D, O, R & Static & Double & \ding{51} & \ding{51} & Network, S = 47, T = 350, D = 6h, H = 18h \\
+	Xiu et al. (2024)        & S-T     & ADMM & \ding{51} & C, D, O, R & Static & Double & \ding{51} & \ding{51} & Network, S = 15, T = 36, D = 2h, H = 6.5h \\
+	\midrule
+	Our project 			 & E-A 	   & MILP, H & \ding{51} & A, C, D, E, O, R, ST & Dynamic & Multiple & & \ding{51} & ? \\
+	\bottomrule
+	\end{tabular}
+	\end{adjustbox}
+	\caption{Characteristics of selected railway rescheduling problems \footcite{Lea_litterature}}
+	\end{table}
+	\vspace{-0.5pt}
+\end{frame}
+
+
+\subsection{Model formulation}
+\begin{frame}{Model formulation : Graph}
+	\begin{itemize}
+		\item Event - Activity Graph, with two layers (trains / passengers)
+		\item An event (= one node) correspond to a train arriving or leaving at a given station or bifurcation.
+		\item Activities (= arc) link the events. There are multiple types :
+	\end{itemize}
+	\begin{table}
+		\centering
+		\begin{tabular}{cc}
+			\textbf{Train activities} & \textbf{Passenger activities} \\
+			\cmidrule{1-1}\cmidrule{2-2}
+			Running & Running \\
+			Waiting & Dwelling \\
+			Pass-through & Transfer\\
+			Starting & Access \\
+			Ending & Egress \\
+			Short-turning & Penalty \\
+		\end{tabular}
+	\end{table}
+	Train activities are detailed with platforms at stations and tracks on the section.\\
+	Passenger activities are aggregated.
+\end{frame}
+
+\begin{frame}{Model formulation : Costs}
+	Three objective functions ($\epsilon$-constraint method):
+	\begin{enumerate}
+		\item Passenger costs (see table)
+		\item Operation costs: $\sim$ the number of kilometers trains run 
+		\item Deviation costs
+	\end{enumerate}
+	\begin{table}
+		\centering
+		\begin{tabular}{cc}
+			\textbf{Passenger activities} & \textbf{Costs} \\
+			\midrule
+			Running & $y_j^k - y_i^k$\\
+			Dwelling & $\beta_1 (y_j^k - y_i^k$)\\
+			Transfer& $\beta_2 + (y_j^k - y_i^k$)\\
+			Access & $\beta_3 \max(0, t_g - y_i^k) + \beta_4 \max(0, y_i^k - t_g)$\\
+			Egress & $0$\\
+			Penalty & $5 * H = 600$\\
+		\end{tabular}
+	\end{table}
+	$$\beta_1 = 2.5 \quad \beta_2 = 10 \quad \beta_3 = 0.5 \quad \beta_4 = 1$$
+\end{frame}
+
+\subsection{Motivation for an heuristic}
+\begin{frame}{Motivation for an heuristic : RER Vaud}
+	\begin{itemize}
+		\item The MILP run fast on the dutch instance ($\sim$ 20 s for optimizing), but RER Vaud is much bigger.
+		\item Currently, the passenger layer would be too big for inclusion in Gurobi.
+	\end{itemize}
+\end{frame}
+
+
+ 
+% ----------------------- Passenger assignment
+\section{Passenger assignment}
+\breakingframe{
+\begin{textblock*}{0.8\textwidth}[0,0.5](0.17\textwidth,  0.55\textheight)
+\centering \Huge\textbf{\textcolor{black}{Passenger assignment}}
+\end{textblock*}
+}
+
+
+\subsection{Performance}
+\begin{frame}{Performance : Setup}
+	We will compare our algorithm to the results of the MIP for the passenger assignment.
+	This will be done on the dutch network, with the initial timetable (without disruption) that includes 15 trains. 
+	We will compare the calculation time with different train capacities (each time for 55 groups):
+	\begin{itemize}
+		\item With a train capacity of 400 (which correspond to 4 groups), we have no capacity conflict
+		\item With a train capacity of 300, we have some capacity conflict
+		\item With a train capacity of 200, we have many capacity conflicts
+	\end{itemize}
+\end{frame}
+\begin{frame}{Performance : Computation time}
+	\begin{table}
+		\centering
+		\begin{tabular}{l|ccc}
+			\toprule 
+			Train capacity & 200 & 300 & 400 \\
+			\midrule
+			Gurobi (MILP) & 0.853 s & 1.000 s & 0.712 s\\
+			Dynamic assignment (priorities) & 0.225 s & 0.188 s & 0.152 s\\
+			Dynamic assignment (presence in the train) & 0.204 s & 0.192 s & 0.150 s\\
+			\bottomrule
+		\end{tabular}
+		\caption{Computation time for our algorithm and the MILP}
+	\end{table}
+	\begin{itemize}
+		\item Running the shortest path on each o-d pair was taking $\sim$ 0.2 s.
+		\item Our algorithm outperforms Gurobi at all capacities.
+		\item Depending on the use of Dijkstra, we even improve on Binder's algorithm if the network is not nearly full.
+	\end{itemize}
+\end{frame}
+\begin{frame}{Performance : Passenger cost}
+	\begin{table}
+		\centering
+		\begin{tabular}{l|ccc}
+			\toprule 
+			Train capacity & 200 & 300 & 400 \\
+			\midrule
+			Gurobi (MILP) & 920050 & 499000 & 294350\\
+			Dynamic assignment (priorities) & 1005150 & 518950 & 294350\\
+			Dynamic assignment (presence in the train) & 1121250 & 528600 & 294350\\
+			\bottomrule
+		\end{tabular}
+		\caption{Passenger cost results for our algorithm and the MILP}
+	\end{table}
+	\begin{itemize}
+		\item When capacity constraints are not reached, the results are the same \ding{51}
+		\item Cost increase when reducing capacity (\ding{51}), at 200 capacity it is enormous : many use of penalty arcs
+		\item Gurobi has lowest cost when capacity constraints are reached : System Optimum
+		\item Considering the presence in the train increase the cost (more constrained, realistic description)
+	\end{itemize}
+\end{frame}
+
+
+% ----------------------- Next steps
+\section{Next steps}
+\breakingframe{
+\begin{textblock*}{0.8\textwidth}[0,0.5](0.17\textwidth,  0.55\textheight)
+\centering \Huge\textbf{\textcolor{black}{Next steps}}
+\end{textblock*}
+}
+\begin{frame}{Next steps}
+	Mandatory steps :
+	\begin{enumerate}
+		\item Develop a dynamic validation of a solution
+		\item Implement an ALNS heuristic
+	\end{enumerate}
+	Facultative steps :
+	\begin{itemize}
+		\item Try another shortest path algorithm / implementation
+		\item Try solving for system optimum dynamically \begin{itemize}
+			\item Use as a lower bound to speed up Gurobi
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+
+
+
+\section*{This is the end}
+\breakingframe{
+\begin{textblock*}{0.8\textwidth}[0,0.5](0.17\textwidth,  0.55\textheight)
+\centering \Huge\textbf{\textcolor{black}{Thank you for your attention}}
+\end{textblock*}
+}
+
+% -----------------------References
+\section{Bibliography}
+% \begin{frame}[allowframebreaks]{\\References}\vspace{4pt}
+\begin{frame}{References}\vspace{4pt}
+\tiny{\printbibliography}
+\end{frame}
+\normalsize
+
+\end{document}
