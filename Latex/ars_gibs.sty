@@ -1,5 +1,6 @@
 \newcommand*{\course}[1]{\def\@course{#1}}
 \newcommand*{\shortauthor}[1]{\def\@shortauthor{#1}}
+\newcommand*{\shorttitle}[1]{\def\@shorttitle{#1}}
 \newcommand*{\semesteryear}[1]{\def\@semesteryear{#1}}
 \newcommand*{\covertable}[1]{\def\@covertable{#1}}
 \newcommand*{\coverimage}[1]{\def\@coverimage{#1}}
@@ -84,7 +85,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\@course}
-\fancyhead[R]{\color{Gray}\@title}
+\fancyhead[R]{\color{Gray}\@shorttitle}
 \fancyfoot[C]{\rmfamily\thepage}
 \fancyfoot[L]{\color{Gray}\nouppercase{\leftmark}}
 \fancyfoot[R]{\@shortauthor}

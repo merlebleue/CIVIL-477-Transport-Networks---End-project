@@ -32,9 +32,12 @@ def plot_network(
         df_node.X,
         df_node.Y,
         c="blue",
-        s=50 if df_od is None else df_od.groupby("org").sum().q,
+        s=100 if df_od is None else df_od.groupby("org").sum().q,
         zorder=20,
     )
+    if df_od is None: # Node index
+        for k, row in df_node.iterrows():
+            plt.annotate(row.Node, (row.X, row.Y), horizontalalignment='center', verticalalignment='center_baseline', color ="white", size = 8, fontweight="bold", zorder = 30)
 
     # Add a legend for node sizes
     if df_od is not None:
@@ -44,18 +47,20 @@ def plot_network(
 
     # Normalize link flows for visualization
     if link_flows is not None and isinstance(link_flows, np.ndarray):
-        max_flow = int(np.max(link_flows))+1
+        max_flow = int(np.abs(link_flows).max())+1
         min_flow = 0
-        normalized_flows = 5 * (link_flows - min_flow) / (max_flow - min_flow)
+        normalized_flows = 5 * (np.abs(link_flows) - min_flow) / (max_flow - min_flow)
+        links_is_difference = np.min(link_flows) < 0
     else:
         normalized_flows = np.ones(len(df_link))
+        links_is_difference = False
 
     # Plot links
     for k, row in df_link.iterrows():
         plt.plot(
             [df_node.X[row.start_node], df_node.X[row.end_node]],
             [df_node.Y[row.start_node], df_node.Y[row.end_node]],
-            color="gray",
+            color=("green" if link_flows[k]<0 else "red" if link_flows[k]>0 else "gray") if links_is_difference else "gray",
             alpha=0.5,
             linewidth=normalized_flows[k],
         )
@@ -73,8 +78,22 @@ def plot_network(
                 linewidth=5 * (flow - min_flow) / (max_flow - min_flow),
                 label=f"{flow:.1f}",
             )
+        handles += plt.plot(
+            [],
+            [],
+            color="red",
+            linewidth=2,
+            label="Increase",
+        )
+        handles += plt.plot(
+            [],
+            [],
+            color="green",
+            linewidth=2,
+            label="Decrease",
+        )
 
-        legend1 = ax.legend(handles=handles, loc="best", title="Link Flows")
+        legend1 = ax.legend(handles=handles, loc="upper right", title="Difference" if links_is_difference else "Link Flows")
         ax.add_artist(legend1)
     else:
         normal_handles += plt.plot(
@@ -95,30 +114,37 @@ def plot_network(
                 [df_node.Y[row.start_node], df_node.Y[row.end_node]],
                 color=['red', 'orange'][int(row.line)-1],
                 linewidth=2,
-                label=f"Tram Line {row.line}" if row.line not in legend_lines else "",
+                label=f"Tram Line {row.line:.0f}" if row.line not in legend_lines else "",
                 zorder = 10
             )
             legend_lines.add(row.line)
 
     # Plot OD pairs
     if df_od is not None:
+        od_in_legend = False
         for _, row in df_od.iterrows():
-            plt.plot(
+            normal_handles += plt.plot(
                 [df_node.X[row.org], df_node.X[row.dest]],
                 [df_node.Y[row.org], df_node.Y[row.dest]],
                 color="green",
                 linewidth=row.q,
                 alpha=0.2,
+                label = "OD demand" if not od_in_legend and row.q > 2 else ""
             )
+            if not od_in_legend and row.q > 2:
+                od_in_legend = True
 
         # Add a legend for the size of the OD pairs
         max_q = int(df_od.q.max())
         min_q = int(df_od.q.min()) + 1
         sizes = [min_q, (min_q + max_q) / 2, max_q]
+        handles = []
         for size in sizes:
-            plt.plot(
+            handles += plt.plot(
                 [], [], color="green", linewidth=size, alpha=0.75, label=f"q = {size}"
             )
+        #legend2 = ax.legend(handles=handles, loc="center right", title="OD demand")
+        #ax.add_artist(legend2)
 
     plt.title(title)
     plt.xticks([])
@@ -128,4 +154,3 @@ def plot_network(
         loc="upper right",
         handles=normal_handles,
     )
-    plt.show()

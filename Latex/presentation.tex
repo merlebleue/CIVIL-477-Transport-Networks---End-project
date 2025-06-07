@@ -9,6 +9,17 @@
   }
 }
 
+\usepackage{layouts}
+
+\usepackage{tikz}
+\usepackage{import}
+\usepackage{tikz-cd}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\def\mathdefault#1{#1}
+\usepackage{lmodern}
+\usepackage[strings]{underscore}
+
 % Important packages to be called
 \usepackage{subcaption} % for adding sub-figures
 \usepackage{graphicx}
@@ -165,7 +176,6 @@
 			\item<5> Compute distance and time of travel for the transit line
 		\end{enumerate}
 		\column{0.5\textwidth}
-		\centering
 		\begin{figure}
 			\centering
 			\only<1>{
@@ -177,7 +187,8 @@
 			\caption{Sioux Falls bus lines matched on the classic network}
 			}
 			\only<3>{
-			\includegraphics[width=0.75\textwidth]{bus_network_on_road_map.pdf}
+			\vspace{-1cm}
+			\resizebox{\textwidth}{!}{\input{Figures/basecase.pgf}}
 			\caption{\alert{Base} trafic flows (at UE)}
 			}
 			\only<4-5>{
@@ -271,4 +282,104 @@
 \end{textblock*}
 }
 
+\subsection{The network}
+\begin{frame}{}
+\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/network.pgf}}
+
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/od_pairs.pgf}}
+\end{columns}
+\end{frame}
+
+\subsection{Base case}
+\begin{frame}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/basecase.pgf}}
+\end{frame}
+
+\subsection{Light rail case}
+\begin{frame}{}
+\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/lightrail_road.pgf}}
+
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/lightrail_tram.pgf}}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{}
+\begin{columns}
+	\column{0.4\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/lightrail_diff.pgf}}
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item As expected, we see a decrease in trafic along the light rail lines.
+		\item Link 7-8 is also seeing improvement altough there are no tram along this link.
+		\item Marginally, there are small differences outside of the tram network.
+	\end{itemize}
+\end{columns}
+\end{frame}
+
+
+\subsection{P\&R case}
+\begin{frame}{}
+\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/PnR_road.pgf}}
+
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/PnR_tram.pgf}}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{}
+\begin{columns}
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/PnR_diff_road.pgf}}
+	\column{0.5\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/PnR_diff_tram.pgf}}
+\end{columns}
+\end{frame}
+
+\begin{frame}{}
+\begin{columns}
+	\column{0.4\textwidth}
+	\centering
+	\resizebox{!}{\textheight}{\input{Figures/PnR_diff_tram.pgf}}
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item Better usage of the Light Rail in the central links.
+		\item Less people are using the light rail on the external branches of the tram.\begin{itemize}
+			\item[\textrightarrow] P\&R facilities replace them
+		\end{itemize}
+		\item Link 9 to 14 (on both tram lines)
+	\end{itemize}
+\end{columns}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item Our results prove the benefit of adding P\&R as a mean of improving the impact of a transit line.
+		\item However, our study has some limitations : \begin{enumerate}
+			\item The only costs considered are travel time. We did not take into account the disadvantages of having to transfer (between road and rail or between two transit lines), or other costs (for example, parking prices).
+			\item The travel time estimation for the light rail was approximated (we took a constant speed of 25 miles/hour)
+			\item We considered the addition of P\&R facilities at all stations, but in practice this is unrealistic (less place downtown, prioritise limiting road usage inside the city)
+		\end{enumerate}
+	\end{itemize}
+\end{frame}
 \end{document}
