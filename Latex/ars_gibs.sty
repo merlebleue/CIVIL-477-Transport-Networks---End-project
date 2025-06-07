@@ -5,8 +5,10 @@
 \newcommand*{\covertable}[1]{\def\@covertable{#1}}
 \newcommand*{\coverimage}[1]{\def\@coverimage{#1}}
 \newcommand*{\coverimagecaption}[1]{\def\@coverimagecaption{#1}}
-\newcommand*{\figurefolder}[1]{\def\@figurefolder{#1}}
-
+\newcommand*{\figurefolder}[1]{
+    \def\@figurefolder{#1}
+    \graphicspath{{#1/}}    
+}
 \newcommand*{\makecover}{{\hypersetup{hidelinks}
     \begin{titlepage}
         {\centering
@@ -101,6 +103,7 @@
 \usepackage[justification=centering]{caption}
 \usepackage[justification=centering]{subcaption}
 \captionsetup[subfigure]{justification=centering}
+\DeclareCaptionType{equ}[][]
 %% Default image width to 0.8\linewidth
 \setkeys{Gin}{width=0.8\linewidth}
 %% Easy tables

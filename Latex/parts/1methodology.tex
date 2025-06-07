@@ -1,0 +1,137 @@
+\section{Methodology}
+
+\subsection{Problem Statement}
+
+To study the impact of a light rail network and park-and-ride facilities, we compute the road link usage in three scenarios:
+\begin{description}
+    \item[1. Base] No light rail.
+    \item[2. Light Rail] Light rail can only be taken when both the origin and destination are served by the network, and no interface is possible between the two.
+    \item[3. P\&R] Light rail can be taken when either the origin or the destination is served by the network.
+\end{description}
+
+We use the simplified network of Sioux Falls as a case study, given its place as a common benchmark in traffic engineering, and because computations run in reasonable time. Figure \ref{fig:casestudy} presents the road network and the OD demand that form the base of our case study.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+    \centering
+    \resizebox{\textwidth}{!}{\input{Figures/network.pgf}}
+    \caption{Sioux Falls road network (simplified)}
+    \label{fig:sf_network}
+    \end{subfigure}%
+    \begin{subfigure}{0.5\textwidth}
+    \centering
+    \resizebox{\textwidth}{!}{\input{Figures/od_pairs.pgf}}
+    \caption{OD pairs considered}
+    \label{fig:od_paires}
+    \end{subfigure}
+    \caption{Case study road network and demand}
+    \label{fig:casestudy}
+\end{figure}
+
+\subsection{Defining the Light Rail Lines}
+
+To define the light rail lines, we mapped the current Sioux Falls bus lines onto this network (see Figure \ref{fig:mapping_bus}). We then compared this network with the most heavily used links at user equilibrium (in the base scenario) to generate two light rail lines (see Figure \ref{fig:light_rail_network}).
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=.7\linewidth]{road_network_on_bus_map.pdf}
+        \caption{Road network on bus map}
+    \end{subfigure}%
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=.7\linewidth]{bus_network_on_road_map.pdf}
+        \caption{Bus lines on road network}
+    \end{subfigure}%
+    \caption{Mapping between the bus lines and the simplified road network}
+    \label{fig:mapping_bus}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \resizebox{.7\textwidth}{!}{\input{Figures/basecase.pgf}}
+        \caption{Link usage at user equilibrium (base scenario)}
+    \end{subfigure}%
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \resizebox{.7\textwidth}{!}{\input{Figures/network_tram.pgf}}
+        \caption{Light rail network defined}
+    \end{subfigure}%
+    \caption{Defining a light rail network}
+    \label{fig:light_rail_network}
+\end{figure}
+
+The travel times are then computed based on the distance between the nodes, as checked on Google Maps. A speed of 25 miles per hour was considered for the light rail, based on average speeds in light rail networks in the US\footnote{\url{https://en.wikipedia.org/wiki/Light_rail\#Speed_and_stop_frequency}}. The individual link travel times are reported in Appendix \ref{sec:tram_travel_times}.
+
+
+\subsection{Assumptions}
+
+The following simplifying assumptions are made :
+\begin{itemize}
+    \item A traveler can only use one P\&R (i.e., they only have one car, which they cannot take with them on public transport).
+    \item The costs of using the light rail for part of the trip (waiting time at the station, time for parking and walking to the station, parking fee, etc.) are considered equivalent to the gain in comfort and in gas costs of using it, so we neglect them. The only cost considered is therefore the travel time on the light rail or on the road.
+    \item The light rail is totally independent of road traffic, and as such has constant travel time.
+\end{itemize}
+
+
+\subsection{Modeling Traffic}
+
+To model the road traffic, we use a Frank-Wolf optimization algorithm with the Bureau of Public Roads formula to compute road travel times (with parameters $\alpha = 0.15, \beta = 4$): 
+
+\begin{equation}
+    t_a(x_a) = \left [ 1 + \alpha \times \left (\frac{x}{\text{capacity}} \right )^\beta \right ]
+\end{equation}
+
+The capacity parameter is link-specific. The travel time on the light rail network is considered to be constant. The shortest path is computed using Dijkstra's algorithm. To reduce computation time, we use the Python library \texttt{scipy} for this purpose.
+
+To model the light rail network, we consider a two-layer approach (Figure \ref{fig:2layer_0}), where the light rail is considered as an additional layer on top of the road network. In scenario \textbf{2. Light rail}, the two layers are not connected. When doing the all-or-nothing assignment, we compute, for the origin-destination (OD) pairs that can use the light rail, the travel time on both layers (Figure \ref{fig:2layer_1}). We then assign traffic to the layer where the travel time is the lowest.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{deux_layers_0.pdf}
+        \caption{The two layers}
+        \label{fig:2layer_0}
+    \end{subfigure}%
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{deux_layers_1.pdf}
+        \caption{A path on each layer}
+        \label{fig:2layer_1}
+    \end{subfigure}
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{deux_layers_2.pdf}
+        \caption{Adding connections\\}
+        \label{fig:2layer_2}
+    \end{subfigure}%
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{deux_layers_3.pdf}
+        \caption{Three graphs: onboarding, offboarding, and road only
+        \label{fig:2layer_3}}
+    \end{subfigure}%
+    \begin{subfigure}{0.33\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{deux_layers_4.pdf}
+        \caption{A path on the onboarding and road networks}
+        \label{fig:2layer_4}
+    \end{subfigure}%
+    \caption{Two-layer network}
+\end{figure}
+
+In the last scenario (\textbf{3. P\&R}), we add connection links between the two layers (Figure \ref{fig:2layer_2}). With our assumptions, the connection links have no cost. However, travelers cannot use the tram network in the middle of the trip (see the definition of the scenario and the first assumption). As such, we consider three different graphs (see Figure \ref{fig:2layer_3}) on which we compute the shortest paths at each all-or-nothing assignment:
+\begin{enumerate}
+    \item Onboarding graph: this graph consists of the two layers, with links only from the road layer to the tram layer. For the origin-destination pairs for which the destination is served by a tram station, we compute the shortest path on this graph, between the origin node on the road layer and the destination node on the tram layer.
+    \item Offboarding graph: this graph consists of the two layers, with links only from the tram layer to the road layer. For the origin-destination pairs for which the origin is served by a tram station, we compute the shortest path on this graph, between the origin node on the tram layer and the destination node on the road layer.
+    \item Road graph: this graph consists only of the road network. We compute the shortest path on this graph for all origin-destination.
+\end{enumerate}
+
+Depending on the origin-destination pair, we may have computed three different shortest paths. We assign the traffic according to the shortest travel time.
+
+

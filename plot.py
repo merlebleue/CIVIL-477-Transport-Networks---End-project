@@ -22,7 +22,7 @@ def plot_network(
             title = "Network representation"
 
     # Create a figure
-    plt.figure(figsize=(7, 7))
+    plt.figure(figsize=(6, 6))
     ax = plt.gca()
 
     normal_handles = []
@@ -78,20 +78,21 @@ def plot_network(
                 linewidth=5 * (flow - min_flow) / (max_flow - min_flow),
                 label=f"{flow:.1f}",
             )
-        handles += plt.plot(
-            [],
-            [],
-            color="red",
-            linewidth=2,
-            label="Increase",
-        )
-        handles += plt.plot(
-            [],
-            [],
-            color="green",
-            linewidth=2,
-            label="Decrease",
-        )
+        if links_is_difference:
+            handles += plt.plot(
+                [],
+                [],
+                color="red",
+                linewidth=2,
+                label="Increase",
+            )
+            handles += plt.plot(
+                [],
+                [],
+                color="green",
+                linewidth=2,
+                label="Decrease",
+            )
 
         legend1 = ax.legend(handles=handles, loc="upper right", title="Difference" if links_is_difference else "Link Flows")
         ax.add_artist(legend1)
@@ -149,6 +150,7 @@ def plot_network(
     plt.title(title)
     plt.xticks([])
     plt.yticks([])
+    print(plt.xlim(None, 500000))
     plt.gca().set_aspect("equal")
     plt.legend(
         loc="upper right",
