@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def plot_network(
-    df_node, df_link, df_link_tram=None, df_od=None, link_flows=None, title=None
+    df_node, df_link, df_link_tram=None, df_od=None, link_flows=None, title=None, reverse_colors = False,
 ):
     """
     Plot the network with nodes and links
@@ -55,12 +55,16 @@ def plot_network(
         normalized_flows = np.ones(len(df_link))
         links_is_difference = False
 
+    color_decrease = "red" if reverse_colors else "green"
+    color_increase = "green" if reverse_colors else "red"
+
+
     # Plot links
     for k, row in df_link.iterrows():
         plt.plot(
             [df_node.X[row.start_node], df_node.X[row.end_node]],
             [df_node.Y[row.start_node], df_node.Y[row.end_node]],
-            color=("green" if link_flows[k]<0 else "red" if link_flows[k]>0 else "gray") if links_is_difference else "gray",
+            color=(color_decrease if link_flows[k]<0 else color_increase if link_flows[k]>0 else "gray") if links_is_difference else "gray",
             alpha=0.5,
             linewidth=normalized_flows[k],
         )
@@ -82,14 +86,14 @@ def plot_network(
             handles += plt.plot(
                 [],
                 [],
-                color="red",
+                color=color_increase,
                 linewidth=2,
                 label="Increase",
             )
             handles += plt.plot(
                 [],
                 [],
-                color="green",
+                color=color_decrease,
                 linewidth=2,
                 label="Decrease",
             )

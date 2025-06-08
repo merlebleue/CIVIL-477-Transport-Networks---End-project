@@ -9,7 +9,7 @@ To study the impact of a light rail network and park-and-ride facilities, we com
     \item[3. P\&R] Light rail can be taken when either the origin or the destination is served by the network.
 \end{description}
 
-We use the simplified network of Sioux Falls as a case study, given its place as a common benchmark in traffic engineering, and because computations run in reasonable time. Figure \ref{fig:casestudy} presents the road network and the OD demand that form the base of our case study.
+We use the simplified network of Sioux Falls as a case study, given its place as a common benchmark in traffic engineering, and because computations run in reasonable time. Figure \ref{fig:casestudy} presents the road network and the OD demand that form the base of our case study. We used the data provided for the assignment of the course; altough unsure of the unit of the demand, we assume it is in thousands of users.
 
 \begin{figure}
     \centering
@@ -75,6 +75,7 @@ The following simplifying assumptions are made :
     \item A traveler can only use one P\&R (i.e., they only have one car, which they cannot take with them on public transport).
     \item The costs of using the light rail for part of the trip (waiting time at the station, time for parking and walking to the station, parking fee, etc.) are considered equivalent to the gain in comfort and in gas costs of using it, so we neglect them. The only cost considered is therefore the travel time on the light rail or on the road.
     \item The light rail is totally independent of road traffic, and as such has constant travel time.
+    \item The light rail has no capacity constraint.
 \end{itemize}
 
 
@@ -87,6 +88,8 @@ To model the road traffic, we use a Frank-Wolf optimization algorithm with the B
 \end{equation}
 
 The $t_0$ and capacity parameters are link-specific. The travel time on the light rail network is considered to be constant. The shortest path is computed using Dijkstra's algorithm. To reduce computation time, we use the Python library \texttt{scipy} for this purpose.
+
+We stop the algorithm when the gap is smaller than $10^{-4}$.
 
 To model the light rail network, we consider a two-layer approach (Figure \ref{fig:2layer_0}), where the light rail is considered as an additional layer on top of the road network. In scenario \textbf{2. Light rail}, the two layers are not connected. When doing the all-or-nothing assignment, we compute, for the origin-destination (OD) pairs that can use the light rail, the travel time on both layers (Figure \ref{fig:2layer_1}). We then assign traffic to the layer where the travel time is the lowest.
 
