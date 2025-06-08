@@ -1,21 +1,21 @@
 \section{Results}
 
-In this section, we present graphical results for each scenario. The numerical values of the results are presented in Appendixes \ref{sec:flow_road} and \ref{sec:flow_rail}.
+This section presents the main results for each scenario, focusing on both graphical and quantitative outcomes. Detailed numerical values are provided in Appendices \ref{sec:flow_road} and \ref{sec:flow_rail}.
 
-\subsection{Base scenario}
+\subsection{Base Scenario}
 
 \begin{figure}
     \centering
     \resizebox{0.33\textwidth}{!}{\input{Figures/basecase.pgf}}
-    \caption{Base scenario trafic}
+    \caption{Base scenario traffic}
     \label{fig:base_scenario}
 \end{figure}
 
-Figure \ref{fig:base_scenario} presents the computed trafic flows in the base scenario. As we can see, line 1  runs along a corridor (nodes 2-3-4-8-9-14-18) with high trafic, while line 2 (nodes 12-23-20-21-14-9-15-7-5) runs on street with small to moderate trafic, except on its shared link with line 1. However, line 2 could take the trafic present on adjacent roads as well.
+Figure \ref{fig:base_scenario} shows the computed traffic flows in the base scenario. Line 1 (nodes 2-3-4-8-9-14-18) follows a path where roads are well used, while line 2 (nodes 12-23-20-21-14-9-15-7-5) mainly serves streets with low to moderate traffic, except for its shared segment with line 1. However, line 2 could also help absorb traffic from adjacent roads.
 
 The \textbf{total travel time} in this scenario is \textbf{74.8 [1000 user $\cdot$ h]}.
 
-\subsection{Light rail scenario}
+\subsection{Light Rail Scenario}
 
 \begin{figure}
     \centering
@@ -40,11 +40,11 @@ The \textbf{total travel time} in this scenario is \textbf{74.8 [1000 user $\cdo
     \label{fig:lightrail_scenario}
 \end{figure}
 
-In Figure \ref{fig:lightrail_scenario}, we present the effect of adding the two tram lines to the model, without park-and-ride facilities. The \textbf{total travel time} in this scenario is \textbf{43.5 [1000 user $\cdot$ h]}, a 40\% improvement on the base scenario. As we can see on Figure \ref{fig:tram_sc2}, the three most used tram links are between nodes 9 and 14 (desserved by both lines), between nodes 21 and 14 (on line 2) and between nodes 9 and 15 (also on line 2). As such, even if line 2 wasn't along the most used road links, it is this line that has the most crowded segments. The overlap between the two lines on the most used link is also good point for the design of the tram network.
+Figure \ref{fig:lightrail_scenario} illustrates the effect of adding two tram lines, without park-and-ride facilities. The \textbf{total travel time} drops to \textbf{43.5 [1000 user $\cdot$ h]}, representing a 40\% improvement over the base scenario. The most heavily used tram links are between nodes 9 and 14 (served by both lines), 21 and 14 (line 2), and 9 and 15 (line 2). Notably, line 2, although not aligned with the highest road traffic, carries the most crowded tram segments. The overlap of both lines on the busiest link is a positive feature for network design.
 
-As we can see in Figure \ref{fig:diff_sc2}, the addition of the tram line reduces road usage on nearly all route links. The route link between node 3 and node 10 is the only one which sees an increase in traffic, but of very limited size (less than 1\%). The best improvements are in the central district, along line 1 (along nodes 8-9-14-18). We also see improvements between nodes 7 and 8 altough those are not desserved directly by a tram line, but also on link 17-19 even though it is not connected to the light rail network. As such, we see that the development of public transport can have positive impact on the congestion in the whole road network and not only in the surrondings of the new public transport.
+As shown in Figure \ref{fig:diff_sc2}, the tram network reduces road usage on nearly all links, with the greatest improvements in the central district (nodes 8-9-14-18). Only the link between nodes 3 and 10 sees a slight increase in traffic (less than 1\%). Improvements are also observed on links not directly served by the tram, such as 7-8 and 17-19. This shows that the development of public transport can have a positive impact on congestion throughout the road network, not just in the surroundings of the new public transport.
 
-\subsection{P\&R scenario}
+\subsection{P\&R Scenario}
 
 \begin{figure}
     \centering
@@ -69,8 +69,7 @@ As we can see in Figure \ref{fig:diff_sc2}, the addition of the tram line reduce
     \label{fig:pnr_scenario}
 \end{figure}
 
-The results of adding a lightrail network with park-and-ride facilities at each station are shown in Figure \ref{fig:pnr_scenario}. The \textbf{total travel time} in this scenario is \textbf{38.1 [1000 user $\cdot$ h]}, the best of all three scenarii. Additionnally, there is a good impact on most links. The improvement is even better in this scenario than in the previous scenario in the central links. However, some links see an increase in traffic even if they are served by a lightrail line (along nodes 2-3-4). Looking at the precise results in Appendix \ref{sec:flow_road}, we understand this is due to the travel time in the Light Rail not being competitive. Now that the users can take their car up to node 4, there is no more usage of the tram on these links.
-
+Figure \ref{fig:pnr_scenario} presents the results for the scenario with park-and-ride facilities at every station. The \textbf{total travel time} is further reduced to \textbf{38.1 [1000 user $\cdot$ h]}, the lowest among all scenarios. The impact is especially strong on central links, with even greater improvements than in the previous scenario. However, some links (e.g., nodes 2-3-4) experience increased traffic despite being served by light rail, due to the light rail not being competitive for those OD pairs—users now drive to node 4 and no longer use the tram for that segment.
 
 \begin{figure}
     \centering
@@ -90,4 +89,4 @@ The results of adding a lightrail network with park-and-ride facilities at each 
     \label{fig:comp_sc23}
 \end{figure}
 
-Comparing adding a light rail network with or without Park-and-ride facilities (Figure \ref{fig:comp_sc23}), we can see increase in the usage of the tram network in the center of the lines, but a decrease on the peripheral links. With P\&R, the light rail network yields better trafic reduction in the center of the city but has less impact for peripheral nodes. Park-and-ride facilities could therefore replace line extensions, increasing the return on investment and allowing to do more impact with less money. Figure \ref{fig:comp_sc23} is particularly useful to design usefull stations where to add Park-and-ride facilities : we would suggest nodes 4, 14, 15 and 21. We would also recommand to study a reduced network without tram lines beyond these nodes, to reduce overall cost.
+Comparing the addition of a light rail network with or without park-and-ride facilities (Figure \ref{fig:comp_sc23}), we can see an increase in the usage of the tram network in the center of the lines, but a decrease on the peripheral links. With P\&R, the light rail network yields better traffic reduction in the center of the city but has less impact for peripheral nodes. Park-and-ride facilities could therefore replace line extensions, increasing the return on investment and allowing for greater impact with less money. Figure \ref{fig:comp_sc23} is particularly useful for designing effective stations where park-and-ride facilities should be added: we suggest nodes 4, 14, 15, and 21. We also recommend studying a reduced network without tram lines beyond these nodes to reduce overall cost.
